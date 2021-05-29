@@ -1,2 +1,2 @@
 # Cubicle
-Node.js practice - express and handlebars
+Node.js - express and handlebars practise
