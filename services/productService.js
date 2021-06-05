@@ -5,15 +5,27 @@ const fs = require("fs");
 
 let productData = require("../config/products.json");
 
-function getAll() {
-  return productData;
+function getAll(query) {
+  let result = productData;
+  if (query.search) {
+    result = result.filter((x) => x.name.toLowerCase().includes(query.search));
+  }
+
+  if (query.from) {
+    result = result.filter((x) => Number(x.level) >= query.from);
+  }
+
+  if (query.to) {
+    result = result.filter((x) => Number(x.level) <= query.to);
+  }
+  return result;
 }
 
 function getOne(id) {
   return productData.find((x) => x.id == id);
 }
 
-function create(data) {
+function create(data, callback) {
   let cube = new Cube(
     uniqid(),
     data.name,
@@ -27,12 +39,7 @@ function create(data) {
   fs.writeFile(
     __dirname + "/../config/products.json",
     JSON.stringify(productData),
-    (err) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-    }
+    callback
   );
 }
 
